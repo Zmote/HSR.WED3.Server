@@ -1,17 +1,16 @@
 import Datastore from 'nedb';
-
-import cryptoUtil from '../util/cryptoUtil';
-import resultUtil from '../util/resultUtil';
+import {resultUtil} from '../util/resultUtil';
 import {toQuery, toCountedQuery} from '../util/dbUtil';
+import {config} from '../config';
+import {cryptoUtil} from '../util/cryptoUtil';
+import {accountService} from './accountService';
 
-import config from '../config';
-import accountService from './accountService';
+console.log(config.db.inMemory);
 
-const db = new Datastore(config.db.inMemory ? {} : { filename: config.db.dbPath.users, autoload: true });
-
+const db = new Datastore(config.db.inMemory ? {} : {filename: config.db.dbPath.users, autoload: true});
 // DB schema / settings
-db.ensureIndex({ fieldName: 'login', unique: true, sparse: true });
-db.ensureIndex({ fieldName: 'accountNr', unique: true, sparse: true });
+db.ensureIndex({fieldName: 'login', unique: true, sparse: true});
+db.ensureIndex({fieldName: 'accountNr', unique: true, sparse: true});
 
 let accountNumberOffset = 1000000;
 
@@ -19,12 +18,11 @@ db.count({}, function (err, count) {
     accountNumberOffset = accountNumberOffset + count;
 });
 
-
 function createUserObj(login, firstname, lastname, password) {
-  let user = {login, firstname, lastname};
-  user.passwordHash = cryptoUtil.hashPwd(password);
-  user.accountNr = String(++accountNumberOffset);
-  return user;
+    let user = {login, firstname, lastname};
+    user.passwordHash = cryptoUtil.hashPwd(password);
+    user.accountNr = String(++accountNumberOffset);
+    return user;
 }
 
 async function getById(id) {
@@ -33,7 +31,7 @@ async function getById(id) {
             db.findOne({_id: id}, {_id: 0, passwordHash: 0}, finish);
         });
         if (user) {
-          return user;
+            return user;
         }
         throw resultUtil.createNotFoundResult();
     } catch (err) {
@@ -52,24 +50,24 @@ async function tryGetByLogin(login) {
 }
 
 async function register(login, firstname, lastname, password) {
-  if (login && firstname && lastname && password) {
-      let userObject;
-      try {
-          userObject = await toQuery(finish => {
-              db.insert(createUserObj(login, firstname, lastname, password), finish);
-          });
-      } catch (err) {
-          throw resultUtil.createErrorResult(err);
-      }
+    if (login && firstname && lastname && password) {
+        let userObject;
+        try {
+            userObject = await toQuery(finish => {
+                db.insert(createUserObj(login, firstname, lastname, password), finish);
+            });
+        } catch (err) {
+            throw resultUtil.createErrorResult(err);
+        }
 
-      if (userObject) {
-          const account = await accountService.add(userObject._id, userObject.accountNr);
-          if (account) {
-              return await tryGetByLogin(login)
-          }
-      }
-  }
-  throw resultUtil.createErrorResult();
+        if (userObject) {
+            const account = await accountService.add(userObject._id, userObject.accountNr);
+            if (account) {
+                return await tryGetByLogin(login)
+            }
+        }
+    }
+    throw resultUtil.createErrorResult();
 }
 
 async function login(login, password) {
@@ -93,4 +91,4 @@ async function login(login, password) {
     throw resultUtil.createNotFoundResult();
 }
 
-export default {getById, tryGetByLogin, register, login};
+export const userService = {getById, tryGetByLogin, register, login};

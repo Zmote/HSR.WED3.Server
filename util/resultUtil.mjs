@@ -19,6 +19,6 @@ function createNotFoundResult(data, statusCode) {
     };
 }
 
-export default {createResult, createErrorResult, createNotFoundResult};
+export const resultUtil = {createResult, createErrorResult, createNotFoundResult};
 
 

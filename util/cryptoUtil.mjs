@@ -20,6 +20,6 @@ async function createToken(data, secret, options) {
   });
 }
 
-export default {hashPwd, createToken};
+export const cryptoUtil = {hashPwd, createToken};
 
 

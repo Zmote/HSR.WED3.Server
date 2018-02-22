@@ -1,5 +1,5 @@
-import userService from '../services/userService';
-import accountService from '../services/accountService';
+import {userService} from '../services/userService';
+import {accountService} from '../services/accountService';
 
 const initialAccountData = [
     { accountNr: null, login: "user1", firstname: "Bob", lastname: "Müller", password: "1234" },
@@ -36,7 +36,7 @@ async function createTransaction() {
     await createTransactionRecursive();
 }
 
-export default {
+export const dataSeed = {
     async insertSeedData() {
         if (!await userService.tryGetByLogin(initialAccountData[0].login)) {
             for (let initialData of initialAccountData) {

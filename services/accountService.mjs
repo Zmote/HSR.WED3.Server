@@ -1,12 +1,15 @@
 import Datastore from 'nedb';
-import resultUtil from '../util/resultUtil';
+import {resultUtil} from '../util/resultUtil';
 import {toQuery, toCountedQuery} from '../util/dbUtil';
-import config from '../config';
+import {config} from '../config';
 
-const db = new Datastore(config.db.inMemory ? {} : { filename: config.db.dbPath.accounts, autoload: true });
-const dbTransaction = new Datastore(config.db.inMemory ? {} : { filename: config.db.dbPath.transactions, autoload: true });
+const db = new Datastore(config.db.inMemory ? {} : {filename: config.db.dbPath.accounts, autoload: true});
+const dbTransaction = new Datastore(config.db.inMemory ? {} : {
+    filename: config.db.dbPath.transactions,
+    autoload: true
+});
 
-db.ensureIndex({ fieldName: 'accountNr', unique: true, sparse: true });
+db.ensureIndex({fieldName: 'accountNr', unique: true, sparse: true});
 
 function createTransactionObj(from, target, amount, total, date) {
     return {
@@ -129,4 +132,4 @@ async function getTransactions(accountId, count, skip, fromDate, toDate) {
     });
 }
 
-export default {add, get, addTransaction, getTransactions};
+export const accountService =  {add, get, addTransaction, getTransactions};

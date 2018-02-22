@@ -11,7 +11,7 @@ const initialBalance = 1000;
 
 let inMemory = false;
 
-export default {
+export const config = {
     jwt: {jwtSecret, signOptions, validateOptions},
     db: {inMemory, dbPath},
     account: {initialBalance}
