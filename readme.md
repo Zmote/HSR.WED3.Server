@@ -1,4 +1,4 @@
-#WED 3 - Node Server für Mini Project (Finance Portal)
+# WED 3 - Node Server für Mini Project (Finance Portal)
 
 ## Getting started
 * [Node.js](https://nodejs.org/en/) muss installiert sein.
@@ -28,7 +28,7 @@ result:
 }
 ```
 
-####url: /auth/login
+#### url: /auth/login
 Sucht nach den angegebenen Login und überprüft das spezifizierte Passwort. Gibt das JWT Token sowie den gefundenen Account zurück.
 ```
 method: post
