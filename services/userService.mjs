@@ -53,7 +53,7 @@ async function tryGetByLogin(login) {
     }
 }
 
-async function register(login, firstname, lastname, password) {
+async function register(login, firstname, lastname, password, registrationDate) {
     if (login && firstname && lastname && password) {
         let userObject;
         try {
@@ -65,7 +65,7 @@ async function register(login, firstname, lastname, password) {
         }
 
         if (userObject) {
-            const account = await accountService.add(userObject._id, userObject.accountNr);
+            const account = await accountService.add(userObject._id, userObject.accountNr, registrationDate);
             if (account) {
                 return await tryGetByLogin(login)
             }

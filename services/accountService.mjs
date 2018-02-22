@@ -28,9 +28,9 @@ function createTransactionObj(from, target, amount, total, date) {
     };
 }
 
-async function createAccount(ownerId, accountNr) {
+async function createAccount(ownerId, accountNr, creationDate) {
     await toQuery(finish => {
-        dbTransaction.insert(createTransactionObj("00000000", accountNr, config.account.initialBalance), finish);
+        dbTransaction.insert(createTransactionObj("00000000", accountNr, config.account.initialBalance, void 0, creationDate), finish);
     });
 
     return {
@@ -41,9 +41,9 @@ async function createAccount(ownerId, accountNr) {
 }
 
 
-async function add(ownerId, accountNr) {
+async function add(ownerId, accountNr, creationDate) {
     if (accountNr && ownerId) {
-        const newAccount = await createAccount(ownerId, accountNr);
+        const newAccount = await createAccount(ownerId, accountNr, creationDate);
 
         return await toQuery(finish => {
             db.insert(newAccount, finish);
@@ -109,14 +109,15 @@ async function getTransactions(accountId, count, skip, fromDate, toDate) {
         $or: [
             {from: accountId, amount: {$lte: 0}},
             {target: accountId, amount: {$gte: 0}}
-        ]
+        ],
+		$and: [
+			{total: {$exists: true}}
+		]
     };
 
     if (fromDate && toDate) {
-        find["$and"] = [
-            {date: {$gte: fromDate}},
-            {date: {$lte: toDate}}
-        ];
+        find.$and.push( {date: {$gte: fromDate}} );
+		find.$and.push( {date: {$lte: toDate}} );
     }
 
     return await toQuery(finish => {

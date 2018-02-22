@@ -3,11 +3,11 @@ import {accountController} from '../controllers/accountController';
 
 const router = express.Router();
 
-router.get('/', (req, res, next) =>  accountController.getAccount(req, res, next,req.user.accountNr ));
+router.get('/', accountController.getAccountByToken);
 
 router.get('/transactions', accountController.getTransactions);
 router.post('/transactions', accountController.addTransactions);
 
-router.get('/:accountNr', (req, res, next) =>  accountController.getAccount(req, res, next,req.params.accountNr ));
+router.get('/:accountNr', accountController.getAccountByParams);
 
 export const accountRouter = router;

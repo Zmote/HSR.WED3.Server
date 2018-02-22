@@ -1,10 +1,18 @@
 import {accountService} from '../services/accountService';
 import {userService} from '../services/userService';
 
+async function getAccountByParams(req, res, next) {
+	await getAccount(req, res, next, req.params.accountNr);
+}
+
+async function getAccountByToken(req, res, next) {
+	await getAccount(req, res, next, req.user.accountNr);
+}
+
 async function getAccount(req, res, next, accountNr) {
   try {
       const account = await accountService.get(accountNr);
-      const user = userService.getById(account.ownerId);
+      const user = await userService.getById(account.ownerId);
 
       if (String(req.user.accountNr) === accountNr) {
           account.owner = user;
@@ -26,10 +34,10 @@ async function getTransactions(req, res, next) {
         res.json(
             await accountService.getTransactions(
                 String(req.user.accountNr),
-                Number(req.query.count),
-                Number(req.query.skip),
-                new Date(req.query.fromDate),
-                new Date(req.query.toDate)));
+                req.query.count ? parseInt(req.query.count) : 0,
+                req.query.skip ? parseInt(req.query.skip) : 0,
+                req.query.fromDate ? new Date(req.query.fromDate) : null,
+                req.query.toDate ? new Date(req.query.toDate) : null));
     } catch (err) {
         next(err);
     }
@@ -41,11 +49,11 @@ async function addTransactions(req, res, next) {
             await accountService.addTransaction(
                 String(req.user.accountNr),
                 String(req.body.target),
-                Number(req.body.amount),
+                parseInt(req.body.amount),
                 null));
     } catch (err) {
         next(err);
     }
 }
 
-export const accountController = {getAccount, getTransactions, addTransactions };
+export const accountController = { getAccountByToken, getAccountByParams, getTransactions, addTransactions };
