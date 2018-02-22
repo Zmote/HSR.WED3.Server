@@ -1,5 +1,5 @@
-import accountService from '../services/accountService';
-import userService from '../services/userService';
+import {accountService} from '../services/accountService';
+import {userService} from '../services/userService';
 
 async function getAccount(req, res, next, accountNr) {
   try {
@@ -48,4 +48,4 @@ async function addTransactions(req, res, next) {
     }
 }
 
-export default {getAccount, getTransactions, addTransactions };
+export const accountController = {getAccount, getTransactions, addTransactions };

@@ -6,11 +6,11 @@ import path from 'path';
 import logger from 'morgan';
 import cors from 'cors';
 
-import config from './config';
-import dataSeed from './util/dataSeed';
+import {config} from './config';
+import {dataSeed} from './util/dataSeed';
 
-import account from './routes/account';
-import users from './routes/users';
+import {accountRouter} from './routes/accountRouter';
+import {userRouter} from './routes/userRouter';
 
 const app = express();
 
@@ -30,9 +30,9 @@ app.use(cors());
 app.use(express.static(path.resolve('./public')));
 
 // register REST routes
-app.use('/auth', users);
+app.use('/auth', userRouter);
 app.use(jwt(config.jwt.validateOptions)); // after this middleware a token is required!
-app.use('/accounts', account);
+app.use('/accounts', accountRouter);
 
 app.use(function(req, res, next) {
   res.status(404);

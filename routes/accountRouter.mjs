@@ -1,5 +1,5 @@
 import express from 'express';
-import accountController from '../controllers/account';
+import {accountController} from '../controllers/accountController';
 
 const router = express.Router();
 
@@ -10,4 +10,4 @@ router.post('/transactions', accountController.addTransactions);
 
 router.get('/:accountNr', (req, res, next) =>  accountController.getAccount(req, res, next,req.params.accountNr ));
 
-export default router;
+export const accountRouter = router;

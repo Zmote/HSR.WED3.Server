@@ -1,4 +1,4 @@
-import userService from '../services/userService';
+import {userService} from '../services/userService';
 
 async function register(req, res, next) {
   let {login, firstname, lastname, password} = req.body;
@@ -18,4 +18,4 @@ async function login(req, res, next) {
     }
 }
 
-export default {register, login};
+export const userController = {register, login};

@@ -5,9 +5,8 @@ import {config} from '../config';
 import {cryptoUtil} from '../util/cryptoUtil';
 import {accountService} from './accountService';
 
-console.log(config.db.inMemory);
-
 const db = new Datastore(config.db.inMemory ? {} : {filename: config.db.dbPath.users, autoload: true});
+
 // DB schema / settings
 db.ensureIndex({fieldName: 'login', unique: true, sparse: true});
 db.ensureIndex({fieldName: 'accountNr', unique: true, sparse: true});
@@ -17,6 +16,11 @@ let accountNumberOffset = 1000000;
 db.count({}, function (err, count) {
     accountNumberOffset = accountNumberOffset + count;
 });
+
+
+/**
+ *  User Service Facilities & API
+ */
 
 function createUserObj(login, firstname, lastname, password) {
     let user = {login, firstname, lastname};

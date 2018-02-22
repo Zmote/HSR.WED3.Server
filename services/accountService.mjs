@@ -4,12 +4,19 @@ import {toQuery, toCountedQuery} from '../util/dbUtil';
 import {config} from '../config';
 
 const db = new Datastore(config.db.inMemory ? {} : {filename: config.db.dbPath.accounts, autoload: true});
+
+// DB schema / settings
 const dbTransaction = new Datastore(config.db.inMemory ? {} : {
     filename: config.db.dbPath.transactions,
     autoload: true
 });
 
 db.ensureIndex({fieldName: 'accountNr', unique: true, sparse: true});
+
+
+/**
+ *  Account Service Facilities & API
+ */
 
 function createTransactionObj(from, target, amount, total, date) {
     return {
