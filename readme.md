@@ -1,14 +1,14 @@
 # WED 3 - Node Server für Mini Project (Finance Portal)
 
-## Getting started
-* [Node.js](https://nodejs.org/en/) muss installiert sein.
+## Getting Started
+* [Node.js](https://nodejs.org/en/) ≥ 9 muss auf Ihrer Entwicklungsmaschine installiert sein.
 * Der Server liegt als node Paket vor (siehe package.json).
-* Installation erfolgt per Aufruf von *npm install* im ServerTestat Folder.
-* Server kann über *npm run start* gestartet werden (alternativ über WebStorm: WebStorm -> Run -> Edit Configurations -> Node Parameters: *--experimental-modules*).
+* Installation erfolgt per Aufruf von *npm install* im Root-Folder des Repositories (Folder des package.json Files).
+* Server kann über *npm run start* gestartet werden (alternativ über WebStorm: WebStorm -> Run -> Edit Configurations -> Node Parameters: *--experimental-modules*). Falls Sie ohne die experimental ES6 Modules arbeiten möchten (z.B. unter Node 8), müssen Sie den Startvorgang des Servers im package.json file anpassen:  ```"start": "node -r @std/esm bin/www.mjs",```.
 * Server wird anschliessend auf [Port 3000](http://localhost:3000) ausgeführt.
 
 ## Seed-Data
-* Bei der Installation werden 3 Users (user1, user2, user3) mit dem Passwort "1234" erstellt.
+* Bei der ersten Ausführung werden 3 Users (user1, user2, user3) mit dem Passwort "1234" erstellt.
 * Zusätzlich werden ca. 1500 zufällige Transaktionen über eine längeren Zeitraum erstellt.
 
 ## Server API Dokumentation
@@ -19,6 +19,7 @@ Registriert einen neuen Benutzer im System und gibt den Benutzer mit der generie
 ```
 method: post
 body: {login, firstname, lastname, password}
+
 result:
 {
   "login": "Test",
@@ -29,10 +30,11 @@ result:
 ```
 
 #### url: /auth/login
-Sucht nach den angegebenen Login und überprüft das spezifizierte Passwort. Gibt das JWT Token sowie den gefundenen Account zurück.
+Sucht nach den angegebenen Login und überprüft das spezifizierte Passwort. Gibt das JWT Token sowie den gefundenen Account zurück, falls der User gefunden wurde - ansonsten wird der Request mit einem Status-Code 404 beantwortet.
 ```
 method: post
 body: {login, password}
+
 result:
 {
   "token": "eyJhbGci...",
@@ -53,6 +55,7 @@ Ruft erweiterte Informationen (z.B. aktuelles Saldo) über den aktuell eingelogg
 ```
 header: Authorization : Bearer <TOKEN>
 method: get
+
 result:
 {
   "ownerId": "DLQUd5u5vHsdTaqN",
@@ -72,6 +75,7 @@ Ruft die Account Informationen über einen beliebigen Account vom System ab.
 ```
 header: Authorization : Bearer <TOKEN>
 method: get
+
 result:
 {
   "accountNr": "1000002",
@@ -89,6 +93,7 @@ result:
 header: Authorization : Bearer <TOKEN>
 method: post
 body: {target, amount}
+
 result:
 {
   "from": "1000001",
@@ -105,6 +110,7 @@ Ruft sämtliche Transaktionen vom *User assoziiert mit dem angegebenen Bearer To
 ```
 header: Authorization : Bearer <TOKEN>
 method: get
+
 result: Transaktions-Informationen für den aktuellen Account zusätzlich noch die Query-Informationen:
 {
   "query": {
