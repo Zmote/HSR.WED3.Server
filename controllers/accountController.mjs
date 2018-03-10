@@ -49,7 +49,7 @@ async function addTransactions(req, res, next) {
             await accountService.addTransaction(
                 String(req.user.accountNr),
                 String(req.body.target),
-                parseInt(req.body.amount),
+                parseFloat(req.body.amount),
                 null));
     } catch (err) {
         next(err);
