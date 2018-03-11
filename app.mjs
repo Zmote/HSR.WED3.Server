@@ -14,7 +14,6 @@ import {userRouter} from './routes/userRouter';
 
 const app = express();
 
-
 // insert data
 dataSeed.insertSeedData();
 
