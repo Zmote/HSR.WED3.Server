@@ -80,7 +80,7 @@ async function login(login, password) {
             let userObject = await toQuery(finish => {
                 db.findOne({$or: [{login: login}, {accountNr: login}]}, finish);
             });
-
+            console.log("User obj:", userObject);
             if (userObject && userObject.passwordHash === cryptoUtil.hashPwd(password)) {
                 let {login, firstname, lastname, accountNr} = userObject;
                 const owner = {login, firstname, lastname, accountNr};
@@ -89,6 +89,7 @@ async function login(login, password) {
                 return {token, owner};
             }
         } catch (err) {
+            console.log("Not found:", err);
             throw resultUtil.createErrorResult(err);
         }
     }

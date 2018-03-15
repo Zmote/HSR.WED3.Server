@@ -12,6 +12,7 @@ async function createToken(data, secret, options) {
   return new Promise((resolve, reject) => {
       jwt.sign(data, secret, options, (err, token) => {
           if (err) {
+              console.log("JWT Sign:",err);
               reject(err);
           } else {
               resolve(token);
